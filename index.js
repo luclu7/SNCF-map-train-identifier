@@ -1,14 +1,13 @@
 // ==UserScript==
 // @name         SNCF TrainIdentifier
 // @namespace    https://greasyfork.org/en/scripts/426122-sncf-trainidentifier
-// @version      0.3
+// @version      0.4
 // @description  Permet de trouver les modèles de trains sur la carte SNCF
 // @author       luclu7
 // @match        https://sncf-maps.hafas.de/maps-ng/?language=fr_FR
 // @icon         https://sncf-maps.hafas.de/maps-ng/img/build/customer/apple-touch-icon-144x144-precomposed.png?v=1.0.4
 // @grant        none
 // ==/UserScript==
-
 
 const listOfRegex = [
     {
@@ -70,7 +69,10 @@ function getTrainModel(trainSerial) {
 window.identifyTrain = async () => {
     if(document.getElementsByClassName("hfs_tqTopLabel").length>0){
         let trainNumber = document.getElementsByClassName("hfs_tqTopLabel")[0].childNodes[1].textContent.match(/[0-9]{1,6}/)[0]
-        const response = await fetch(`https://compo.luc.ovh/train?number=${trainNumber}&date=2021-05-07`, {
+        let parsedDate = new Date(new Date().getTime() - (new Date().getTimezoneOffset() * 60000))
+            .toISOString()
+            .split("T")[0];
+        const response = await fetch(`https://compo.luc.ovh/train?number=${trainNumber}&date=${parsedDate}`, {
             "credentials": "omit",
             "headers": {
                 "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:90.0) Gecko/20100101 Firefox/90.0",
@@ -87,11 +89,10 @@ window.identifyTrain = async () => {
         const element = await response.json();
         console.log(element)
         if (typeof element.reponseRechercherListeCirculations.reponse.listeResultats.resultat[0].donnees.listeCirculations !== 'undefined') {
-            console.log("owo")
             // always the first circulation, if it's french
             let circulation = element.reponseRechercherListeCirculations.reponse.listeResultats.resultat[0].donnees.listeCirculations.circulation[0]
             if (circulation.operateur.codeOperateur !== "1187") {
-                console.log("woops")
+                console.log("pas SNCF!")
             } else {
                 console.log(circulation.mode.typeLibelle + " n°" + circulation.numero + " de " + circulation.origine.libelle + " à " + circulation.destination.libelle)
 
@@ -117,9 +118,14 @@ window.identifyTrain = async () => {
                 if (typeof composition !== 'undefined') {
                     commercialName = [];
                     composition.element.forEach((compoElement, index) => {
+                        console.log(compoElement.numeroAffectation)
                         if (typeof compoElement.numeroAffectation !== 'undefined') {
-                            commercialName[index]=getTrainModel(compoElement.numeroAffectation)+` ${compoElement.numeroAffectation}`
-
+                            if(compoElement.libelleFamilleMateriel === "Automoteurs TGV") {
+                                commercialName[index]=`${compoElement.libelleTypeMateriel} ${compoElement.numeroAffectation}`
+                            } else {
+                                // le reste
+                                commercialName[index]=getTrainModel(compoElement.numeroAffectation)+` (${compoElement.numeroAffectation})`
+                            }
                         }
                     })
                     let commercialNames = commercialName.join(", ");
