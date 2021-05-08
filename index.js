@@ -1,11 +1,11 @@
 // ==UserScript==
 // @name         SNCF TrainIdentifier
-// @namespace    http://tampermonkey.net/
-// @version      0.1
-// @description  try to take over the world!
+// @namespace    https://greasyfork.org/en/scripts/426122-sncf-trainidentifier
+// @version      0.2
+// @description  Permet de trouver les modèles de trains sur la carte SNCF
 // @author       luclu7
 // @match        https://sncf-maps.hafas.de/maps-ng/?language=fr_FR
-// @icon         view-source:https://sncf-maps.hafas.de/maps-ng/img/build/customer/apple-touch-icon-144x144-precomposed.png?v=1.0.4
+// @icon         https://sncf-maps.hafas.de/maps-ng/img/build/customer/apple-touch-icon-144x144-precomposed.png?v=1.0.4
 // @grant        none
 // ==/UserScript==
 
