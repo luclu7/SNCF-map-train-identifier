@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         SNCF TrainIdentifier
 // @namespace    https://greasyfork.org/en/scripts/426122-sncf-trainidentifier
-// @version      0.2
+// @version      0.3
 // @description  Permet de trouver les modèles de trains sur la carte SNCF
 // @author       luclu7
 // @match        https://sncf-maps.hafas.de/maps-ng/?language=fr_FR
@@ -118,7 +118,8 @@ window.identifyTrain = async () => {
                     commercialName = [];
                     composition.element.forEach((compoElement, index) => {
                         if (typeof compoElement.numeroAffectation !== 'undefined') {
-                            commercialName[index]=getTrainModel(compoElement.numeroAffectation)
+                            commercialName[index]=getTrainModel(compoElement.numeroAffectation)+` ${compoElement.numeroAffectation}`
+
                         }
                     })
                     let commercialNames = commercialName.join(", ");
