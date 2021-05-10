@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         SNCF TrainIdentifier
 // @namespace    https://greasyfork.org/en/scripts/426122-sncf-trainidentifier
-// @version      0.4
+// @version      0.5
 // @description  Permet de trouver les modèles de trains sur la carte SNCF
 // @author       luclu7
 // @match        https://sncf-maps.hafas.de/maps-ng/?language=fr_FR
